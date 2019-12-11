@@ -11,7 +11,13 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@openzeppelin/contracts": "^2.4.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
+    "@openzeppelin/test-helpers": "^0.5.4",
+    "bignumber.js": "^9.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0"
   }
 }
