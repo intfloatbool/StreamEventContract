@@ -3,7 +3,6 @@ const GameBetContract = artifacts.require('GameBetContract');
 
 let accounts = null;
 let gameBetContract = null;
-let potentialInvestorAddr = null;
 
 contract('GameBetContract contract', () => {
     before(async () => {
@@ -22,6 +21,14 @@ contract('GameBetContract contract', () => {
             const balanceOfContract = await web3.eth.getBalance(gameBetContract.address);
             const balanceAfterTransaction = web3.utils.fromWei(balanceOfContract);
             assert.equal(balanceAfterTransaction > balanceOfContractBeforeETH, true);
+        });
+    });
+
+    describe("Leaf contracts", () => {
+        it("Should all leafs exists", async () => {
+            const trueAccount = await gameBetContract.betHolderTRUE();
+            const falseAccout = await gameBetContract.betHolderFALSE();
+            assert.equal(!trueAccount && !falseAccout, false);
         });
     });
 

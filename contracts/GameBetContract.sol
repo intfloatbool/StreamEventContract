@@ -1,19 +1,19 @@
 pragma solidity 0.5.12;
 
+import "./BetHolderContract.sol";
 
 contract GameBetContract {
-    uint public balance;
-    event Receive(uint value, address payable from);
+
+    BetHolderContract public betHolderTRUE;
+    BetHolderContract public betHolderFALSE;
+
     constructor() public payable {
-
+        betHolderTRUE = new BetHolderContract();
+        betHolderFALSE = new BetHolderContract();
     }
 
+    //this function necessary to get payments!
     function () external payable {
-        emit Receive(msg.value, msg.sender);
-    }
-    function makeBet(bool condition) public {
-    }
-
-    function getLastBet() public view returns(bool) {
+    
     }
 }
