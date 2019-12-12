@@ -42,7 +42,7 @@ contract GameBetContract is Ownable {
     }
 
     function sendAllMoneysToTrue() private {
-        uint sum = 0;     
+        uint sum = 0;
         for(uint i = 0; i < falsePlayersArr.length; i++) {
             address payable player = falsePlayersArr[i];
             sum += betHolderFALSE.players(player);
