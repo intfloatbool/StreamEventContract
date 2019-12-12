@@ -1,11 +1,11 @@
 pragma solidity 0.5.12;
-
 import "./BetHolderContract.sol";
 
 contract GameBetContract {
 
     BetHolderContract public betHolderTRUE;
-    BetHolderContract public betHolderFALSE;
+    BetHolderContract public betHolderFALSE; 
+    mapping(address => uint) public players;
 
     constructor() public payable {
         betHolderTRUE = new BetHolderContract();
@@ -13,7 +13,5 @@ contract GameBetContract {
     }
 
     //this function necessary to get payments!
-    function () external payable {
-    
-    }
+    function () external payable {}
 }

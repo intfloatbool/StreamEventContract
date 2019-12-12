@@ -30,6 +30,10 @@ contract('GameBetContract contract', () => {
             const falseAccout = await gameBetContract.betHolderFALSE();
             assert.equal(!trueAccount && !falseAccout, false);
         });
+
+        it("Should have gameBetContract as owner", async () => {
+            
+        });
     });
 
 });
