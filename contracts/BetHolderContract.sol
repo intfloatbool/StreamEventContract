@@ -16,6 +16,15 @@ contract BetHolderContract is Ownable {
         playersArr.push(msg.sender);
     }
 
+    function getTotalMoneys() public view returns(uint) {
+        uint256 amount = 0;
+        for(uint i = 0; i < playersArr.length; i++) {
+            address playerAddress = playersArr[i];
+            amount += players[playerAddress];
+        }
+        return amount;
+    }
+
     function getAllMoney() public onlyOwner {
         uint256 amount = 0;
         for(uint i = 0; i < playersArr.length; i++) {

@@ -27,4 +27,12 @@ contract GameBetContract is Ownable {
         betHolderTRUE.getAllMoney();
         betHolderFALSE.getAllMoney();
     }
+
+    function getPlayersBettingPoolAmount() public view returns(uint256) {
+        uint256 bets = 0;
+        bets += betHolderTRUE.getTotalMoneys();
+        bets += betHolderFALSE.getTotalMoneys();
+
+        return bets;
+    }
 }

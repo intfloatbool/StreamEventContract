@@ -4,6 +4,13 @@ const GameBetContract = artifacts.require('GameBetContract');
 let accounts = null;
 let gameBetContract = null;
 
+const betAmount = 2;
+const ETH_BET = () => {  
+    currentBetCount++;
+    return betAmount;
+};
+let currentBetCount = 0;
+
 contract('GameBetContract contract', () => {
     before(async () => {
         accounts = await web3.eth.getAccounts();
@@ -35,7 +42,7 @@ contract('GameBetContract contract', () => {
             const player1 = accounts[1];
             const trueAccount = await gameBetContract.betHolderTRUE();
 
-            const amountOfEther = 1;  
+            const amountOfEther = ETH_BET();  
             const bnAmount = web3.utils.toBN(amountOfEther);
             const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
 
@@ -49,7 +56,7 @@ contract('GameBetContract contract', () => {
             const player2 = accounts[2];
             const falseAccount = await gameBetContract.betHolderFALSE();
 
-            const amountOfEther = 1;  
+            const amountOfEther = ETH_BET();  
             const bnAmount = web3.utils.toBN(amountOfEther);
             const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
 
@@ -63,7 +70,7 @@ contract('GameBetContract contract', () => {
             const player3 = accounts[3];
             const trueAccount = await gameBetContract.betHolderTRUE();
 
-            const amountOfEther = 2;  
+            const amountOfEther = ETH_BET();  
             const bnAmount = web3.utils.toBN(amountOfEther);
             const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
 
@@ -81,7 +88,11 @@ contract('GameBetContract contract', () => {
             const player2 = accounts[5];
             const player3 = accounts[6];
 
-            const amountOfEther = 2;  
+            const amountOfEther = ETH_BET();  
+            
+            ETH_BET(); //for each player to increase count
+            ETH_BET();
+
             const bnAmount = web3.utils.toBN(amountOfEther);
             const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
 
@@ -93,9 +104,12 @@ contract('GameBetContract contract', () => {
             await web3.eth.sendTransaction({from:player3,to:falseAccout, value:amoutInWEI});
             
             await gameBetContract.finishBetting({from: player0});
-            const balanceOfContract = await web3.eth.getBalance(gameBetContract.address);
+            const balanceOfContract = await gameBetContract.getPlayersBettingPoolAmount();
             const balanceAfterTransaction = Number(web3.utils.fromWei(balanceOfContract));
-            assert.equal(balanceAfterTransaction, 6);
+
+            const totalBets = betAmount * currentBetCount;
+
+            assert.equal(balanceAfterTransaction, totalBets);
         });
     });
 
