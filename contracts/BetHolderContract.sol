@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 
 contract BetHolderContract is Ownable {
     mapping(address => uint256) public players;
-    address[] private playersArr;
+    address payable[] private playersArr;
     address payable private _parentAddress;
     constructor(address payable parentAddress) public {
         _parentAddress = parentAddress;
@@ -23,6 +23,10 @@ contract BetHolderContract is Ownable {
             amount += players[playerAddress];
         }
         return amount;
+    }
+
+    function getPlayers() public view returns(address payable[] memory) {
+        return playersArr;
     }
 
     function getAllMoney() public onlyOwner {

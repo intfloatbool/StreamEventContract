@@ -5,7 +5,13 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 contract GameBetContract is Ownable {
 
     BetHolderContract public betHolderTRUE;
-    BetHolderContract public betHolderFALSE; 
+    BetHolderContract public betHolderFALSE;
+
+    mapping(address => uint256) public truePlayersHashTable;
+    address payable[] private truePlayersArr;
+
+    mapping(address => uint256) public falsePlayersHashTable;
+    address payable[] private falsePlayersArr;
 
     constructor() public payable {
         betHolderTRUE = new BetHolderContract(address(this));
@@ -23,9 +29,38 @@ contract GameBetContract is Ownable {
         return betHolderFALSE.players(msg.sender);
     }
 
-    function finishBetting() public onlyOwner {
+    function finishBetting(bool isTrue) public onlyOwner {
+        savePlayersFromChilds();
         betHolderTRUE.getAllMoney();
         betHolderFALSE.getAllMoney();
+
+        if(isTrue == true) {
+            sendAllMoneysToTrue();
+        } else {
+            sendAllMoneysToFalse();
+        }
+    }
+
+    function sendAllMoneysToTrue() private {
+        uint sum = 0;     
+        for(uint i = 0; i < falsePlayersArr.length; i++) {
+            address payable player = falsePlayersArr[i];
+            sum += betHolderFALSE.players(player);
+        }
+
+        //devide sum by true players
+        if(sum > 0 && truePlayersArr.length > 0) {
+            uint eachPayment = sum / truePlayersArr.length;
+
+            for(uint i = 0; i < truePlayersArr.length; i++) {
+                address payable player = truePlayersArr[i];
+                player.transfer(eachPayment);
+            }
+        }
+    }
+
+    function sendAllMoneysToFalse() private {
+
     }
 
     function getPlayersBettingPoolAmount() public view returns(uint256) {
@@ -34,5 +69,30 @@ contract GameBetContract is Ownable {
         bets += betHolderFALSE.getTotalMoneys();
 
         return bets;
+    }
+
+    function savePlayersFromChilds() private {
+        address payable[] memory truePlayers = betHolderTRUE.getPlayers();
+        address payable[] memory falsePlayers = betHolderFALSE.getPlayers();
+
+        for(uint i = 0; i < truePlayers.length; i++) {
+            address payable player = truePlayers[i];
+            truePlayersArr.push(player);
+        }
+
+        for(uint i = 0; i < falsePlayers.length; i++) {
+            address payable player = falsePlayers[i];
+            falsePlayersArr.push(player);
+        }
+
+        for(uint i = 0; i < truePlayersArr.length; i++) {
+            address payable player = truePlayersArr[i];
+            truePlayersHashTable[player] = betHolderTRUE.players(player);
+        }
+
+        for(uint i = 0; i < falsePlayersArr.length; i++) {
+            address payable player = falsePlayersArr[i];
+            falsePlayersHashTable[player] = betHolderFALSE.players(player);
+        }
     }
 }

@@ -11,7 +11,7 @@ const ETH_BET = () => {
 };
 let currentBetCount = 0;
 
-contract('GameBetContract contract', () => {
+contract('GameBetContract contract account settings', () => {
     before(async () => {
         accounts = await web3.eth.getAccounts();
         gameBetContract = await GameBetContract.new();
@@ -89,7 +89,6 @@ contract('GameBetContract contract', () => {
             const player3 = accounts[6];
 
             const amountOfEther = ETH_BET();  
-            
             ETH_BET(); //for each player to increase count
             ETH_BET();
 
