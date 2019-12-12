@@ -13,4 +13,12 @@ contract GameBetContract {
 
     //this function necessary to get payments!
     function () external payable {}
+
+    function getPlayerBalanceInTrueBets() public view returns(uint256) {
+        return betHolderTRUE.players(msg.sender);
+    }
+
+    function getPlayerBalanceInFalseBets() public view returns(uint256) {
+        return betHolderFALSE.players(msg.sender);
+    }
 }
