@@ -31,8 +31,32 @@ contract('GameBetContract contract', () => {
             assert.equal(!trueAccount && !falseAccout, false);
         });
 
-        it("Should have gameBetContract as owner", async () => {
-            
+        it("trueAccount Should get payment from player", async () => {
+            const player1 = accounts[1];
+            const trueAccount = await gameBetContract.betHolderTRUE();
+
+            const amountOfEther = 1;  
+            const bnAmount = web3.utils.toBN(amountOfEther);
+            const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
+
+            await web3.eth.sendTransaction({from:player1,to:trueAccount, value:amoutInWEI});
+            const balanceOfContract = await web3.eth.getBalance(trueAccount);
+            const balanceInETH = Number(web3.utils.fromWei(balanceOfContract));
+            assert.equal(amountOfEther, balanceInETH);
+        });
+
+        it("falseAccount Should get payment from player", async () => {
+            const player2 = accounts[2];
+            const falseAccount = await gameBetContract.betHolderFALSE();
+
+            const amountOfEther = 1;  
+            const bnAmount = web3.utils.toBN(amountOfEther);
+            const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
+
+            await web3.eth.sendTransaction({from:player2,to:falseAccount, value:amoutInWEI});
+            const balanceOfContract = await web3.eth.getBalance(falseAccount);
+            const balanceInETH = Number(web3.utils.fromWei(balanceOfContract));
+            assert.equal(amountOfEther, balanceInETH);
         });
     });
 

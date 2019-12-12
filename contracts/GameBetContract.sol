@@ -5,7 +5,6 @@ contract GameBetContract {
 
     BetHolderContract public betHolderTRUE;
     BetHolderContract public betHolderFALSE; 
-    mapping(address => uint) public players;
 
     constructor() public payable {
         betHolderTRUE = new BetHolderContract();
