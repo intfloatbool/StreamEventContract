@@ -64,7 +64,23 @@ contract GameBetContract is Ownable {
     }
 
     function sendAllMoneysToFalse() private {
+        uint sum = 0;
+        for(uint i = 0; i < truePlayersArr.length; i++) {
+            address payable player = truePlayersArr[i];
+            sum += betHolderTRUE.players(player);
+        }
 
+        //devide sum by true players
+        if(sum > 0 && falsePlayersArr.length > 0) {
+            uint eachPayment = sum / falsePlayersArr.length;
+
+            for(uint i = 0; i < falsePlayersArr.length; i++) {
+                address payable player = falsePlayersArr[i];
+                uint falseBet = betHolderFALSE.players(player);
+                uint total = eachPayment + falseBet;
+                player.transfer(total);
+            }
+        }
     }
 
     function getPlayersBettingPoolAmount() public view returns(uint256) {
