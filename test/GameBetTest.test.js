@@ -12,6 +12,7 @@ const ETH_BET = () => {
 let currentBetCount = 0;
 
 contract('GameBetContract contract account settings', () => {
+    return;
     before(async () => {
         accounts = await web3.eth.getAccounts();
         gameBetContract = await GameBetContract.new();
@@ -102,7 +103,7 @@ contract('GameBetContract contract account settings', () => {
             await web3.eth.sendTransaction({from:player2,to:trueAccount, value:amoutInWEI});
             await web3.eth.sendTransaction({from:player3,to:falseAccout, value:amoutInWEI});
             
-            await gameBetContract.finishBetting({from: player0});
+            await gameBetContract.finishBettingForTrue({from: player0});
             const balanceOfContract = await gameBetContract.getPlayersBettingPoolAmount();
             const balanceAfterTransaction = Number(web3.utils.fromWei(balanceOfContract));
 

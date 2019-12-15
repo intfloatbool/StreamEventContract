@@ -29,16 +29,18 @@ contract GameBetContract is Ownable {
         return betHolderFALSE.players(msg.sender);
     }
 
-    function finishBetting(bool isTrue) public onlyOwner {
+    function finishBettingForTrue() public onlyOwner {
         savePlayersFromChilds();
         betHolderTRUE.getAllMoney();
         betHolderFALSE.getAllMoney();
+        sendAllMoneysToTrue();
+    }
 
-        if(isTrue == true) {
-            sendAllMoneysToTrue();
-        } else {
-            sendAllMoneysToFalse();
-        }
+    function finishBettingForFalse() public onlyOwner {
+        savePlayersFromChilds();
+        betHolderTRUE.getAllMoney();
+        betHolderFALSE.getAllMoney();
+        sendAllMoneysToFalse();
     }
 
     function sendAllMoneysToTrue() private {
@@ -54,7 +56,9 @@ contract GameBetContract is Ownable {
 
             for(uint i = 0; i < truePlayersArr.length; i++) {
                 address payable player = truePlayersArr[i];
-                player.transfer(eachPayment);
+                uint trueBet = betHolderTRUE.players(player);
+                uint total = eachPayment + trueBet;
+                player.transfer(total);
             }
         }
     }
