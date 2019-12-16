@@ -21,7 +21,67 @@ contract('GameBetContract prize calc', () => {
 
     });
 
-    it('should returns MICRO each bets and give bonuses for FALSE', async () => {
+    it('should make bets several times for TRUE', async () => {
+        const contractOwner = accounts[0];
+
+        const acc1 = accounts[1];
+        const acc2 = accounts[2];
+        const acc3 = accounts[3];
+        const acc4 = accounts[4];
+        const acc5 = accounts[5];
+
+        //TRUE bets   
+        const betCountEthAcc1 = 0.1;
+        let amoutInWEIAcc1 = web3.utils.toWei(betCountEthAcc1.toString(), 'ether');
+
+        const betCountEthAcc2 = 0.07;
+        let amoutInWEIAcc2 = web3.utils.toWei(betCountEthAcc2.toString(), 'ether');
+
+        const betCountEthAcc3 = 0.3;
+        let amoutInWEIAcc3 = web3.utils.toWei(betCountEthAcc3.toString(), 'ether');
+
+        //FALSE bets
+        const betCountEthAcc4 = 0.5;
+        let amoutInWEIAcc4 = web3.utils.toWei(betCountEthAcc4.toString(), 'ether');
+
+        const betCountEthAcc5 = 0.32;
+        let amoutInWEIAcc5 = web3.utils.toWei(betCountEthAcc5.toString(), 'ether');
+
+        await web3.eth.sendTransaction({from:acc1, to:trueContractAdress, value:amoutInWEIAcc1});
+        await web3.eth.sendTransaction({from:acc2, to:trueContractAdress, value:amoutInWEIAcc2});
+        await web3.eth.sendTransaction({from:acc3, to:trueContractAdress, value:amoutInWEIAcc3});
+
+        await web3.eth.sendTransaction({from:acc4, to:falseContractAdress, value:amoutInWEIAcc4});
+        await web3.eth.sendTransaction({from:acc5, to:falseContractAdress, value:amoutInWEIAcc5});
+
+        await gameBetContract.finishBettingForFalse({from: contractOwner});
+
+        console.log("bets again..");
+        //make bets again
+        const trueBetETH = 2;
+        const trueBetWei = web3.utils.toWei(trueBetETH.toString(), 'ether');
+
+        await web3.eth.sendTransaction({from:acc1, to:trueContractAdress, value:trueBetWei});
+        await web3.eth.sendTransaction({from:acc2, to:trueContractAdress, value:trueBetWei});
+
+        await web3.eth.sendTransaction({from:acc4, to:falseContractAdress, value:trueBetWei});
+        await web3.eth.sendTransaction({from:acc5, to:falseContractAdress, value:trueBetWei});
+
+        await gameBetContract.finishBettingForTrue({from: contractOwner});
+
+        const balanceOfAcc1 = await web3.eth.getBalance(acc1);
+        const acc1Balance = Number(web3.utils.fromWei(balanceOfAcc1));
+
+        let neededBalance = 101.9;
+
+        const range = neededBalance - acc1Balance;
+        if(range < 1) {
+            neededBalance = acc1Balance;
+        }
+        assert.equal(acc1Balance, neededBalance);
+    });
+
+    it.skip('should returns MICRO each bets and give bonuses for FALSE', async () => {
         const contractOwner = accounts[0];
 
         const acc1 = accounts[1];

@@ -38,5 +38,7 @@ contract BetHolderContract is Ownable {
         if(amount > 0) {
             _parentAddress.transfer(amount);
         }            
+
+        delete playersArr;
     }
 }

@@ -92,6 +92,9 @@ contract GameBetContract is Ownable {
     }
 
     function savePlayersFromChilds() private {
+        delete truePlayersArr;
+        delete falsePlayersArr;
+
         address payable[] memory truePlayers = betHolderTRUE.getPlayers();
         address payable[] memory falsePlayers = betHolderFALSE.getPlayers();
 
