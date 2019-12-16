@@ -21,7 +21,15 @@ contract('GameBetContract prize calc', () => {
 
     });
 
-    it('should make bets several times for TRUE', async () => {
+    it('Should not return errors when no bets', async () => {
+
+        const contractOwner = accounts[0];
+        await gameBetContract.finishBettingForFalse({from: contractOwner});
+        await gameBetContract.finishBettingForTrue({from: contractOwner});
+        assert(true, true);
+    });
+
+    it.skip('should make bets several times for TRUE', async () => {
         const contractOwner = accounts[0];
 
         const acc1 = accounts[1];
