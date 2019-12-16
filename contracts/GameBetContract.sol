@@ -13,7 +13,7 @@ contract GameBetContract is Ownable {
     mapping(address => uint256) public falsePlayersHashTable;
     address payable[] private falsePlayersArr;
 
-    constructor() public payable {
+    constructor() Ownable() public payable {
         betHolderTRUE = new BetHolderContract(address(this));
         betHolderFALSE = new BetHolderContract(address(this));
     }
