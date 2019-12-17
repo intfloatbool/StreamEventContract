@@ -21,7 +21,7 @@ contract('GameBetContract prize calc', () => {
 
     });
 
-    it('Should not return errors when no bets', async () => {
+    it.skip('Should not return errors when no bets', async () => {
 
         const contractOwner = accounts[0];
         await gameBetContract.finishBettingForFalse({from: contractOwner});
@@ -29,7 +29,7 @@ contract('GameBetContract prize calc', () => {
         assert(true, true);
     });
 
-    it.skip('should make bets several times for TRUE', async () => {
+    it('should make bets several times for TRUE', async () => {
         const contractOwner = accounts[0];
 
         const acc1 = accounts[1];
@@ -37,6 +37,11 @@ contract('GameBetContract prize calc', () => {
         const acc3 = accounts[3];
         const acc4 = accounts[4];
         const acc5 = accounts[5];
+
+        //set gas price
+        const gasPrice = await web3.eth.getGasPrice();
+        const gasWei = web3.utils.fromWei(gasPrice, 'ether');
+        await gameBetContract.setGasCost(gasPrice);
 
         //TRUE bets   
         const betCountEthAcc1 = 0.1;
@@ -55,7 +60,10 @@ contract('GameBetContract prize calc', () => {
         const betCountEthAcc5 = 0.32;
         let amoutInWEIAcc5 = web3.utils.toWei(betCountEthAcc5.toString(), 'ether');
 
+        //Several transactions from same addr
         await web3.eth.sendTransaction({from:acc1, to:trueContractAdress, value:amoutInWEIAcc1});
+        //await web3.eth.sendTransaction({from:acc1, to:trueContractAdress, value:amoutInWEIAcc1}); 
+
         await web3.eth.sendTransaction({from:acc2, to:trueContractAdress, value:amoutInWEIAcc2});
         await web3.eth.sendTransaction({from:acc3, to:trueContractAdress, value:amoutInWEIAcc3});
 
@@ -74,6 +82,14 @@ contract('GameBetContract prize calc', () => {
 
         await web3.eth.sendTransaction({from:acc4, to:falseContractAdress, value:trueBetWei});
         await web3.eth.sendTransaction({from:acc5, to:falseContractAdress, value:trueBetWei});
+
+        const balaceOfFalseAcc = await web3.eth.getBalance(falseContractAdress);
+        const balaceOfFalseAccEth = Number(web3.utils.fromWei(balaceOfFalseAcc));
+        console.log(`False con balance: ${balaceOfFalseAccEth}`);
+
+        const balaceOfTrueAcc = await web3.eth.getBalance(trueContractAdress);
+        const balaceOfTrueAccEth = Number(web3.utils.fromWei(balaceOfTrueAcc));
+        console.log(`True con balance: ${balaceOfTrueAccEth}`);
 
         await gameBetContract.finishBettingForTrue({from: contractOwner});
 

@@ -6,8 +6,15 @@ contract BetHolderContract is Ownable {
     mapping(address => uint256) public players;
     address payable[] private playersArr;
     address payable private _parentAddress;
+
+    uint256 private _gasUsed;
+
     constructor(address payable parentAddress) public {
         _parentAddress = parentAddress;
+    }
+
+    function setGasCosts(uint256 gasCost) public onlyOwner {
+        _gasUsed = gasCost;
     }
 
      //this function necessary to get payments!
@@ -36,8 +43,9 @@ contract BetHolderContract is Ownable {
             amount += players[playerAddress];
         }
         if(amount > 0) {
-            _parentAddress.transfer(amount);
-        }            
+            uint256 valueToSend = amount - _gasUsed - gasleft();
+            _parentAddress.transfer(valueToSend);
+        }
 
         delete playersArr;
     }

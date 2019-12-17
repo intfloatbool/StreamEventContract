@@ -29,6 +29,11 @@ contract GameBetContract is Ownable {
         return betHolderFALSE.players(msg.sender);
     }
 
+    function setGasCost(uint256 gasCost) public onlyOwner {
+        betHolderTRUE.setGasCosts(gasCost);
+        betHolderFALSE.setGasCosts(gasCost);
+    }
+
     function finishBettingForTrue() public onlyOwner {
         savePlayersFromChilds();
         betHolderTRUE.getAllMoney();
