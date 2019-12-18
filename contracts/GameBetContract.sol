@@ -36,16 +36,20 @@ contract GameBetContract is Ownable {
 
     function finishBettingForTrue() public onlyOwner {
         savePlayersFromChilds();
-        betHolderTRUE.getAllMoney();
-        betHolderFALSE.getAllMoney();
-        sendAllMoneysToTrue();
+        if(truePlayersArr.length > 0) {
+            betHolderTRUE.getAllMoney();
+            betHolderFALSE.getAllMoney();
+            sendAllMoneysToTrue();
+        }
     }
 
     function finishBettingForFalse() public onlyOwner {
         savePlayersFromChilds();
-        betHolderTRUE.getAllMoney();
-        betHolderFALSE.getAllMoney();
-        sendAllMoneysToFalse();
+        if(falsePlayersArr.length > 0) {
+            betHolderTRUE.getAllMoney();
+            betHolderFALSE.getAllMoney();
+            sendAllMoneysToFalse();
+        }
     }
 
     function sendAllMoneysToTrue() private {
