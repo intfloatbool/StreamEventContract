@@ -7,17 +7,20 @@ let falseContractAdress = null;
 let trueContractAdress = null; 
 
 contract('GameBetContract prize calc', () => {
-    beforeEach(async () => {
+    before(async () => {
         accounts = await web3.eth.getAccounts();
-        gameBetContract = await GameBetContract.new();
+        gameBetContract = await GameBetContract.deployed();
         falseContractAdress = await gameBetContract.betHolderFALSE();
         trueContractAdress = await gameBetContract.betHolderTRUE();
-
+        
+        console.log(`FalseCon addr: ${falseContractAdress}`);
+        console.log(`TrueCon addr: ${trueContractAdress}`);
         //Increase balance of parent contract!
         const amountOfEther = 1;  
         const bnAmount = web3.utils.toBN(amountOfEther);
         const amoutInWEI = web3.utils.toWei(bnAmount, 'ether');
-        await web3.eth.sendTransaction({from:accounts[0],to:gameBetContract.address, value:amoutInWEI});
+        console.log(`Your contract address: ${GameBetContract.address}`);
+        await web3.eth.sendTransaction({from:accounts[0],to:GameBetContract.address, value:amoutInWEI});
 
     });
 
@@ -27,6 +30,29 @@ contract('GameBetContract prize calc', () => {
         await gameBetContract.finishBettingForFalse({from: contractOwner});
         await gameBetContract.finishBettingForTrue({from: contractOwner});
         assert(true, true);
+    });
+
+    it('Should calculate big bets', async () => {
+        const contractOwner = accounts[0];
+        const acc1 = accounts[1];
+        const acc6 = accounts[6];
+
+        const betCountEthAcc1 = 10;
+        let amoutInWEIAcc1 = web3.utils.toWei(betCountEthAcc1.toString(), 'ether');
+
+        const betCountEthAcc6 = 6;
+        let amoutInWEIAcc6 = web3.utils.toWei(betCountEthAcc6.toString(), 'ether');
+
+        await web3.eth.sendTransaction({from:acc1, to:trueContractAdress, value:amoutInWEIAcc1});
+        await web3.eth.sendTransaction({from:acc6, to:falseContractAdress, value:amoutInWEIAcc6});
+
+        await gameBetContract.finishBettingForTrue({from: contractOwner});
+
+        const neededBalanceETH = 106;
+        const balaceAcc6 = await web3.eth.getBalance(acc6);
+        const balaceAcc6ETH = Number(web3.utils.fromWei(balaceAcc6));
+
+        assert.equal(balaceAcc6ETH, neededBalanceETH);
     });
 
     it.skip('should make bets several times for TRUE', async () => {
